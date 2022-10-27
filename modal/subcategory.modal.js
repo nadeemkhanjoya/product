@@ -1,0 +1,23 @@
+import mongoose from "mongoose";
+
+const subCategoryShema = new mongoose.Schema({
+    name:{
+        type:String,
+        required:true
+    },
+    status:{
+        type:String,
+        enum:["Active","Deactive"],
+        default:"Active"
+    },
+    cateId:{
+        type: mongoose.Schema.Types.ObjectId, ref: 'category'
+    },
+    createdBy:{
+        type: mongoose.Schema.Types.ObjectId, ref: 'user' 
+    },
+    createdAt: { type: Date, default: Date.now },
+	updatedAt: { type: Date, default: Date.now },
+})
+const subCategory = mongoose.model("subcategory", subCategoryShema);
+export default subCategory;
