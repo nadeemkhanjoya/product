@@ -44,3 +44,24 @@ export const get = async(req,res)=>{
        res.send("worng name ")
     }
 }
+
+export const resendOtp = async(req,res)=>{
+   var otp = 1234
+   req.body.otp=otp
+   const data = await user.findByIdAndUpdate({_id:req.body._id},req.body)
+   if(data){
+      res.send({
+         status:true,
+         msg:"otp send",
+         data:data
+      })
+   }else{
+      res.send({
+         status:false,
+         msg:"not otp send",
+         data:{}
+      })
+   }
+
+}
+

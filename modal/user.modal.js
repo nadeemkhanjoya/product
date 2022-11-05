@@ -21,7 +21,22 @@ const userschema =new mongoose.Schema({
         type:String,
         enum:["Active","Deactive"],
         default:"Active"
-    },  
+    }, 
+    email_verify:{
+       type:Boolean,
+       required:false,
+       default:false
+    } , 
+    number_verify:{
+       type:Boolean,
+       required:false,
+       default:false
+    } , 
+    otp:{
+       type:Number,
+       required:false,
+       default:false
+    }, 
 
     createdAt: { type: Date, default: Date.now },
 	updatedAt: { type: Date, default: Date.now },
