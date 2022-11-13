@@ -34,8 +34,8 @@ const userschema =new mongoose.Schema({
     } , 
     otp:{
        type:Number,
-       required:false,
-       default:false
+       required:false
+       
     }, 
 
     createdAt: { type: Date, default: Date.now },
