@@ -53,6 +53,41 @@ export const get = async (req, res) => {
    }
 }
 
+export const deletedata = async (req, res) => {
+   try {
+      const lele = await user.findOne({ email: req.body.email })
+      if (lele) {
+         const word = await bcrypt.compare(req.body.password, lele.password)
+         if (word == true) {
+            var dele = await user.findByIdAndDelete(lele)
+            res.send({
+               status: true,
+               msg: "your account delete successfully",
+               data: lele
+            })
+         } else {
+            res.send({
+               status: false,
+               msg: "password incorrect pleass try aggain",
+               data: {}
+            })
+         }
+      } else {
+         res.send({
+            status: false,
+            msg: "email dose not exist",
+            data: {}
+         })
+      }
+   } catch (error) {
+      res.send({
+         status: false,
+         msg: "something wrong",
+         data: {}
+      })
+   }
+}
+
 export const resendOtp = async (req, res) => {
    try {
       var otp = Math.floor(1000 + Math.random() * 9000);
@@ -78,6 +113,29 @@ export const resendOtp = async (req, res) => {
          data: error
       })
    }
+
+}
+
+
+export const cheakotp =async (req,res)=>{
+   var cheak =await user.findOne({email:req.body.email,otp:req.body.otp})
+    if(cheak){
+      var jamil  = {}
+      jamil.email_verify=true
+      await user.find({_id:cheak._id},jamil)
+      cheak.email_verify=true
+      res.send({
+         status:true,
+         msg:'veryfy succesfully',
+         data:cheak
+      })
+    }else{
+      res.send({
+         status:false,
+         msg:'veryfy unsucces',
+         data:{}
+      })
+    }
 
 }
 export const emailSend = async (req, res) => {
@@ -118,7 +176,7 @@ export const emailSend = async (req, res) => {
    }
 }
 
-export const tryi = async (req, res) => {
+export const email_paas = async (req, res) => {
    try {
 
       var otp = Math.floor(1000 + Math.random() * 9000)
