@@ -2,7 +2,7 @@ import user from "../modal/user.modal.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer"
-
+import csv from "csvtojson"
 export const sinup = async (req, res) => {
    try {
 
@@ -117,71 +117,68 @@ export const resendOtp = async (req, res) => {
 }
 
 
-export const cheakotp =async (req,res)=>{
-   var cheak =await user.findOne({email:req.body.email,otp:req.body.otp})
-    if(cheak){
-      var jamil  = {}
-      jamil.email_verify=true
-      await user.find({_id:cheak._id},jamil)
-      cheak.email_verify=true
-      res.send({
-         status:true,
-         msg:'veryfy succesfully',
-         data:cheak
-      })
-    }else{
-      res.send({
-         status:false,
-         msg:'veryfy unsucces',
-         data:{}
-      })
-    }
-
-}
-export const emailSend = async (req, res) => {
-   try {
-      var otp = Math.floor(1000 + Math.random() * 9000)
-      var transepoter = nodemailer.createTransport({
-         host: "smtp.gmail.com",
-         port: 587,
-         secure: false,
-         requireTLS: true,
-         auth: {
-            user: "thenadeemkhan00@gmail.com",
-            pass: "esxdqcvlcnirkdoj"
-         }
-      })
-      var mailOption = {
-         from: "thenadeemkhan00@gmail.com",
-         to: req.body.email,
-         subject: "your app otp--",
-         html: "<p>your app otp is:" + otp + "</ap>"
-      }
-      transepoter.sendMail(mailOption, function (err, info) {
-         if (err) {
-            console.log("error--", err);
-         } else {
-            console.log("info---", info.response);
-         }
-      })
-      req.body.otp = otp
-      const findId = await user.findOneAndUpdate({ email: req.body.email }, req.body)
-      findId.otp = req.body.otp
+export const cheakotp = async (req, res) => {
+   var cheak = await user.findOne({ email: req.body.email, otp: req.body.otp })
+   if (cheak) {
+      var jamil = {}
+      jamil.email_verify = true
+      await user.findByIdAndUpdate({ _id: cheak.id }, jamil)
+      cheak.email_verify = true
       res.send({
          status: true,
-         data: findId
+         msg: 'veryfy succesfully',
+         data: cheak
       })
-   } catch (err) {
-
+   } else {
+      res.send({
+         status: false,
+         msg: 'veryfy unsucces',
+         data: {}
+      })
    }
+
 }
+// export const emailSend = async (req, res) => {
+//    try {
+//       var otp = Math.floor(1000 + Math.random() * 9000)
+//       var transepoter = nodemailer.createTransport({
+//          host: "smtp.gmail.com",
+//          port: 587,
+//          secure: false,
+//          requireTLS: true,
+//          auth: {
+//             user: "thenadeemkhan00@gmail.com",
+//             pass: "esxdqcvlcnirkdoj"
+//          }
+//       })
+//       var mailOption = {
+//          from: "thenadeemkhan00@gmail.com",
+//          to: req.body.email,
+//          subject: "your app otp--",
+//          html: "<p>your app otp is:" + otp + "</ap>"
+//       }
+//       transepoter.sendMail(mailOption, function (err, info) {
+//          if (err) {
+//             console.log("error--", err);
+//          } else {
+//             console.log("info---", info.response);
+//          }
+//       })
+//       req.body.otp = otp
+//       const findId = await user.findOneAndUpdate({ email: req.body.email }, req.body)
+//       findId.otp = req.body.otp
+//       res.send({
+//          status: true,
+//          data: findId
+//       })
+//    } catch (err) {
+//    }
+// }
 
 export const email_paas = async (req, res) => {
    try {
-
       var otp = Math.floor(1000 + Math.random() * 9000)
       var tra = nodemailer.createTransport({
-
          host: "smtp.gmail.com",
          port: 587,
          secure: false,
@@ -206,6 +203,7 @@ export const email_paas = async (req, res) => {
       })
       req.body.otp = otp
       const fin = await user.findOneAndUpdate({ email: req.body.email }, req.body)
+   
       fin.otp = req.body.otp
       if (fin) {
          res.send({
@@ -220,19 +218,15 @@ export const email_paas = async (req, res) => {
 
          })
       }
-
-
-
-
    } catch (error) {
       res.send(error)
    }
-
 }
 
 export const forgot = async (req, res) => {
    try {
       const email = await user.findOne({ email: req.body.email, otp: req.body.otp })
+      console.log(email);
       if (email) {
          var pass = await bcrypt.hash(req.body.password, 10)
          await user.findByIdAndUpdate({ _id: email.id }, req.body)
@@ -241,7 +235,55 @@ export const forgot = async (req, res) => {
       }
    } catch (error) {
 
-      //console.log(error)
+      console.log(error)
    }
 }
 
+
+
+// export const insertData = async (req, res) => {
+//    const jsonArray = await csv().fromFile("coaching_users.csv");
+//    var rejected = []
+//    var success = 0
+//    jsonArray.forEach(async(value,key) => {
+//       const IsEmailExist = await user.findOne({ email: value.email })
+//       const IsMobileExist = await user.findOne({ mobile: value.mobile })
+//       if (IsEmailExist) {
+//          rejected.push({
+//             email: value.email,
+//             reason: "Email already exist.",
+//             key: key+1
+//          });
+//       } else if (IsMobileExist) {
+//          rejected.push({
+//             email: value.email,
+//             mobile: value.mobile,
+//             reason: "Mobile already exist.",
+//             key: key+1
+//          });
+//       }
+//       else {
+//          const passwordHash = await bcrypt.hash(value.password, 10)
+//          value.password = passwordHash
+//          var user = await user.create(value);
+//          if (user) {
+//             success+1;
+//          }
+//       }
+//    });
+//    if(success == 0){
+//       res.send({
+//          status:false,
+//          msg:"No data inserted.",
+//          rejected_data:rejected,
+//          success:success,
+//       })
+//    }else{
+//       res.send({
+//          status:false,
+//          msg:"Data inserted succefully.",
+//          rejected_data:rejected,
+//          success:success,
+//       })
+//    }
+// }
