@@ -31,3 +31,25 @@ export const productcreat = async(req,res) => {
     });
 }
 } 
+
+export const productget = async(req,res)=>{
+    const find = await product.findOne({status:"active"})
+    var where = {status:"Active",sub_cate_id:req.params.subCateId}
+    // if(req.query.search){
+    //     where.name = req.query.search;
+    // }
+const data = await product.find(where).sort({'_id': -1});
+if(data.length > 0){
+    res.send({
+       status:true,
+       msg:"Data fetch successsfiully.",
+       data:data
+    })
+ }else{
+    res.send({
+       status:false,
+       msg:"Product not found.",
+       data:[]
+    })
+ }
+}

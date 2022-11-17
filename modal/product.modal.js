@@ -13,6 +13,10 @@ const productschema = new mongoose.Schema({
     createdBy:{
         type: mongoose.Schema.Types.ObjectId, ref: 'user' 
     },
+    sub_cate:{
+        type: mongoose.Schema.Types.ObjectId, ref: 'subcategory' ,
+        required:true
+    },
     is_popular:{
         type:Boolean,
         default:0
