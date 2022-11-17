@@ -240,8 +240,40 @@ export const forgot = async (req, res) => {
 }
 
 
-export const resetpass = (req,res)=>{
-res.send("kljkjvhvvav k j j  jd  msmncjscnjnsjcndjvnajxj")
+export const resetpass = async(req,res)=>{
+try {
+   const checkUserExist = await user.findOne({_id:req.body._id})
+   if(checkUserExist){
+      let checkPass = await bcrypt.compare(req.body.old_pass,checkUserExist.password)
+      if(checkPass){
+            var dataToBeUpdate = {};
+            const passwordHash = await bcrypt.hash(req.body.new_pass,10)
+            dataToBeUpdate.password = passwordHash;
+            await user.findByIdAndUpdate({_id:checkUserExist._id},dataToBeUpdate)
+
+         res.send({
+            status:true,
+            msg:"password reset succesefully",
+            data:checkUserExist
+         })
+     }else{
+      res.send({
+         status:false,
+         msg:"worng old password",
+         data:{}
+      })
+     }
+  }else{
+   res.send({
+      status:false,
+      msg:"data not found",
+      data:{}
+   })
+  }
+
+} catch (err) {
+   res.send(err)
+}
 }
 
 
