@@ -240,6 +240,11 @@ export const forgot = async (req, res) => {
 }
 
 
+export const resetpass = (req,res)=>{
+res.send("kljkjvhvvav k j j  jd  msmncjscnjnsjcndjvnajxj")
+}
+
+
 
 // export const insertData = async (req, res) => {
 //    const jsonArray = await csv().fromFile("coaching_users.csv");
