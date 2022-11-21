@@ -46,7 +46,11 @@ export const get = async (req, res) => {
             data: namee
          })
       } else {
-         res.send("worng password")
+         res.send({
+            status:false,
+            msg:"worng password",
+            data:{}
+         })
       }
    } else {
       res.send("worng name ")
