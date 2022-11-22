@@ -231,20 +231,22 @@ export const email_paas = async (req, res) => {
 }
 
 export const forgot = async (req, res) => {
-   // try {
+   try {
       const email = await user.findOne({ email: req.body.email, otp: req.body.otp })
       if (email) {
-         await user.findByIdAndUpdate({ _id: email.id }, req.body)
          var pass = await bcrypt.hash(req.body.password, 10)
-        email.password = pass
+        req.body.password = pass
+         await user.findByIdAndUpdate({ _id: email.id }, req.body)
+         email.password = pass
          res.send(email)
-      console.log(email);
+        
+
 
       }
-   // } catch (error) {
+   } catch (error) {
 
-   //    console.log(error)
-   // }
+      console.log(error)
+   }
 }
 
 
