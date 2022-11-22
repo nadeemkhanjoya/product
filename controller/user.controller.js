@@ -47,13 +47,16 @@ export const get = async (req, res) => {
          })
       } else {
          res.send({
-            status:false,
-            msg:"worng password",
-            data:{}
+            status: false,
+            msg: "worng password",
+            data: {}
          })
       }
    } else {
-      res.send("worng name ")
+      res.send({
+         status: false,
+         msg: "data not found"
+      })
    }
 }
 
@@ -195,7 +198,7 @@ export const email_paas = async (req, res) => {
       var option = {
          from: "thenadeemkhan00@gmail.com",
          to: req.body.email,
-         subject: "DHHUHDHH",
+         subject: "send v code",
          html: "<p>your otp-----------" + otp + "</ap>"
       }
       tra.sendMail(option, function (err, info) {
@@ -207,7 +210,7 @@ export const email_paas = async (req, res) => {
       })
       req.body.otp = otp
       const fin = await user.findOneAndUpdate({ email: req.body.email }, req.body)
-   
+
       fin.otp = req.body.otp
       if (fin) {
          res.send({
@@ -228,56 +231,57 @@ export const email_paas = async (req, res) => {
 }
 
 export const forgot = async (req, res) => {
-   try {
+   // try {
       const email = await user.findOne({ email: req.body.email, otp: req.body.otp })
-      console.log(email);
       if (email) {
-         var pass = await bcrypt.hash(req.body.password, 10)
          await user.findByIdAndUpdate({ _id: email.id }, req.body)
-         email.password = pass
+         var pass = await bcrypt.hash(req.body.password, 10)
+        email.password = pass
          res.send(email)
+      console.log(email);
+
       }
-   } catch (error) {
+   // } catch (error) {
 
-      console.log(error)
-   }
+   //    console.log(error)
+   // }
 }
 
 
-export const resetpass = async(req,res)=>{
-try {
-   const checkUserExist = await user.findOne({_id:req.body._id})
-   if(checkUserExist){
-      let checkPass = await bcrypt.compare(req.body.old_pass,checkUserExist.password)
-      if(checkPass){
+export const resetpass = async (req, res) => {
+   try {
+      const checkUserExist = await user.findOne({ _id: req.body._id })
+      if (checkUserExist) {
+         let checkPass = await bcrypt.compare(req.body.old_pass, checkUserExist.password)
+         if (checkPass) {
             var dataToBeUpdate = {};
-            const passwordHash = await bcrypt.hash(req.body.new_pass,10)
+            const passwordHash = await bcrypt.hash(req.body.new_pass, 10)
             dataToBeUpdate.password = passwordHash;
-            await user.findByIdAndUpdate({_id:checkUserExist._id},dataToBeUpdate)
+            await user.findByIdAndUpdate({ _id: checkUserExist._id }, dataToBeUpdate)
 
+            res.send({
+               status: true,
+               msg: "password reset succesefully",
+               data: checkUserExist
+            })
+         } else {
+            res.send({
+               status: false,
+               msg: "worng old password",
+               data: {}
+            })
+         }
+      } else {
          res.send({
-            status:true,
-            msg:"password reset succesefully",
-            data:checkUserExist
+            status: false,
+            msg: "data not found",
+            data: {}
          })
-     }else{
-      res.send({
-         status:false,
-         msg:"worng old password",
-         data:{}
-      })
-     }
-  }else{
-   res.send({
-      status:false,
-      msg:"data not found",
-      data:{}
-   })
-  }
+      }
 
-} catch (err) {
-   res.send(err)
-}
+   } catch (err) {
+      res.send(err)
+   }
 }
 
 
