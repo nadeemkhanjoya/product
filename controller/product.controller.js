@@ -18,6 +18,7 @@ export const productcreat = async(req,res) => {
                allImages.push(imageData)
         });
         req.body.images = allImages
+    
     const createProd = await product.create(req.body);
     if(createProd){
         
@@ -33,7 +34,7 @@ export const productcreat = async(req,res) => {
 } 
 
 export const productget = async(req,res)=>{
-    const find = await product.findOne({status:"active"})
+    // const find = await product.findOne({is_popular:"0"})
     var where = {status:"Active",sub_cate_id:req.params.subCateId}
     // if(req.query.search){
     //     where.name = req.query.search;
@@ -53,3 +54,20 @@ if(data.length > 0){
     })
  }
 }
+
+export const popular =async(req,res)=>{
+    var sarch = await product.find({is_popular:"1"})
+    if(sarch){
+        res.send({
+            status:true,
+            msg:"Data fetch successsfiully.",
+            data:sarch
+        })
+    }else{
+        res.send({
+            status:false,
+            msg:"Product not found.",
+            data:[]
+         })
+    }
+} 

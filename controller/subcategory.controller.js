@@ -19,7 +19,7 @@ export const sinnnn=async(req,res)=>{
 
 export const Getall=async(req,res)=>{
 try {
-    const data = await subCategory.find({status:"Active"}).populate("cateId").populate("createdBy")
+    const data = await subCategory.find({status:"Active"})
    if(data.length > 0){
       res.send({
          status:true,

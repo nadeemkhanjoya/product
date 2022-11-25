@@ -235,11 +235,11 @@ export const forgot = async (req, res) => {
       const email = await user.findOne({ email: req.body.email, otp: req.body.otp })
       if (email) {
          var pass = await bcrypt.hash(req.body.password, 10)
-        req.body.password = pass
+         req.body.password = pass
          await user.findByIdAndUpdate({ _id: email.id }, req.body)
          email.password = pass
          res.send(email)
-        
+
 
 
       }
@@ -286,51 +286,60 @@ export const resetpass = async (req, res) => {
    }
 }
 
+function insertFun(uName, email, resone, key) {
+   return {
+      name: uName,
+      email: email,
+      resone: resone,
+      key: key
 
+   }
+}
 
-// export const insertData = async (req, res) => {
-//    const jsonArray = await csv().fromFile("coaching_users.csv");
-//    var rejected = []
-//    var success = 0
-//    jsonArray.forEach(async(value,key) => {
-//       const IsEmailExist = await user.findOne({ email: value.email })
-//       const IsMobileExist = await user.findOne({ mobile: value.mobile })
-//       if (IsEmailExist) {
-//          rejected.push({
-//             email: value.email,
-//             reason: "Email already exist.",
-//             key: key+1
-//          });
-//       } else if (IsMobileExist) {
-//          rejected.push({
-//             email: value.email,
-//             mobile: value.mobile,
-//             reason: "Mobile already exist.",
-//             key: key+1
-//          });
-//       }
-//       else {
-//          const passwordHash = await bcrypt.hash(value.password, 10)
-//          value.password = passwordHash
-//          var user = await user.create(value);
-//          if (user) {
-//             success+1;
-//          }
-//       }
-//    });
-//    if(success == 0){
-//       res.send({
-//          status:false,
-//          msg:"No data inserted.",
-//          rejected_data:rejected,
-//          success:success,
-//       })
-//    }else{
-//       res.send({
-//          status:false,
-//          msg:"Data inserted succefully.",
-//          rejected_data:rejected,
-//          success:success,
-//       })
-//    }
-// }
+export const insertData = async (req, res) => {
+   const jsonArray = await csv().fromFile(req.file.path);
+   var success = 0
+   var rejected = []
+   jsonArray.forEach(async (value, key) => {
+      const find = await user.findOne({ email: value.email })
+      if (!value.email) {
+         rejected.push(inertFun(value.name, value.email, "Email can not be blenk.", key+1))
+      } else if (!value.password) {
+         rejected.push(insertFun(value.name, value.email, "Password can not be blenk.", key+1 ))
+      }
+      else if (!value.name) {
+         rejected.push(insertFun(value.name, value.email, "Username can not be blenk.", key+1 ))
+      }
+      
+     else if (find) {
+         rejected.push(insertFun(value.name, value.umail, "user is exsiste", key+1  ))
+      } else {
+         var pass = await bcrypt.hash(value.password, 10)
+         value.password = pass
+         const creatUser = await user.create(value)
+         if (creatUser) {
+            success++
+         }
+      }
+   });
+   setTimeout(() => {
+      if (success == 0) {
+         res.send({
+            status: false,
+            msg: "No data inserted.",
+            success: success,
+            rejected_data: rejected,
+            total: jsonArray.length
+         })
+      } else {
+         res.send({
+            status: false,
+            msg: "Data inserted succefully.",
+            success: success,
+            rejected_data: rejected,
+            total: jsonArray.length
+
+         })
+      }
+   }, "1000");
+}

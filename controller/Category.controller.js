@@ -24,7 +24,7 @@ export const sin=async(req,res)=>{
 
 export const getall =async(req,res)=>{
     try {
-        const data = await catergory.find({name:req.body.name}).populate("createdBy")
+        const data = await catergory.findo({name:req.body.name}).populate("createdBy")
    if(data.length > 0){
       res.send({
          status:true,
@@ -45,4 +45,31 @@ export const getall =async(req,res)=>{
             data: err
          })
     }
+}
+
+export const lookup = async(req,res)=>{
+   const agri = await catergory.aggregate([
+      {
+         $match: {
+            status: "Active"
+         },
+      },
+      {
+         "$lookup": {
+            "from": "subcategory",
+            "localField": "_id",
+            "foreignField": "cateId",
+            "as": "tryit"
+         }
+      },
+      {
+         "$unwind": {
+            path: "$tryit",
+            preserveNullAndEmptyArrays: true
+
+         }
+      },
+
+   ]);
+   res.send(agri)
 }

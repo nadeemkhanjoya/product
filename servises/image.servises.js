@@ -1,3 +1,4 @@
+import { Error } from "mongoose";
 import multer from "multer";
 import path from "path";
 console.log("servise on");
@@ -22,4 +23,17 @@ export const imageupload = multer({
 
 
 
+})
+
+export const excel = multer({
+    storage:imagestorage,
+    limits: {
+        fileSize:1000000*10
+    },
+    fileFilter(req,file,cb){
+        if(!file.originalname.match(/\.(csv|xlsx)$/)){
+        return cb (new Error("please upload excel"))
+    }
+    cb(undefined, true)
+}
 })
