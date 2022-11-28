@@ -1,6 +1,6 @@
 import express from "express"
 
-import { sinup , get, resendOtp, forgot, deletedata, cheakotp, email_paas, resetpass, insertData} from "../controller/user.controller.js"
+import { sinup , get, resendOtp, forgot, deletedata, cheakotp, email_paas, resetpass, insertData, src} from "../controller/user.controller.js"
 import { excel } from "../servises/image.servises.js"
 const userroute = express.Router()
 
@@ -13,6 +13,7 @@ userroute.route("/user/veryfyotp").post(cheakotp)
 userroute.route("/user/emailsendotp").post(email_paas)
 userroute.route("/user/forgot").post(forgot)
 userroute.route("/user/resetpass").post(resetpass)
+userroute.route("/user/serch").post(src)
 userroute.route("/user/exceluplod").post(excel.single("excel_upload"),insertData)
 
 export default userroute

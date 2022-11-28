@@ -71,3 +71,21 @@ export const popular =async(req,res)=>{
          })
     }
 } 
+
+
+export const best =async(req,res)=>{
+    var sarch = await product.find({is_best:"1"})
+    if(sarch){
+        res.send({
+            status:true,
+            msg:"Data fetch successsfiully.",
+            data:sarch
+        })
+    }else{
+        res.send({
+            status:false,
+            msg:"Product not found.",
+            data:[]
+         })
+    }
+} 

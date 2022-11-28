@@ -48,10 +48,11 @@ export const getall =async(req,res)=>{
 }
 
 export const lookup = async(req,res)=>{
-   const agri = await catergory.aggregate([
+ const agri = await catergory.aggregate([
       {
          $match: {
-            status: "Active"
+            //  status: "Active"
+             name: { $regex: "b" } 
          },
       },
       {
@@ -63,12 +64,26 @@ export const lookup = async(req,res)=>{
          }
       },
       {
-         "$unwind": {
-            path: "$tryit",
-            preserveNullAndEmptyArrays: true
-
+         "$lookup": {
+            "from": "user",
+            "localField": "_id",
+            "foreignField": "createdBy",
+            "as": "tryit"
          }
       },
+      // {
+      //    "$unwind": {
+      //       path: "$tryit",
+      //       preserveNullAndEmptyArrays: true
+
+      //    }
+     // },
+      // { $limit: Number(10) },
+   //   { $group:
+   //    {
+   //       _id: {name: "$name" },
+   //       total_catygory: { $sum:1 },
+   //     }}
 
    ]);
    res.send(agri)

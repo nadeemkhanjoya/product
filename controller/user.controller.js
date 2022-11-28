@@ -343,3 +343,18 @@ export const insertData = async (req, res) => {
       }
    }, "1000");
 }
+
+export const src = async(req,res)=>{
+   var cc = await user.findOne({
+      
+         $match: {
+            // status: "Active"
+            name: { $regex: req.query.search } 
+         },
+
+   //   { $lookup
+   // },
+      
+   })
+   res.send(cc)
+}
