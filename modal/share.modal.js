@@ -10,7 +10,7 @@ const shareschema = new mongoose.Schema({
     who_shared:{
         type:mongoose.Schema.Types.ObjectId,ref:"user"
     },
-    I:{
+    who_received:{
         type:mongoose.Schema.Types.ObjectId,ref:"user"
     },
     createdAt:{

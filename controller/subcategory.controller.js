@@ -29,7 +29,7 @@ try {
    }else{
       res.send({
          status:false,
-         msg:"Sub Categories not found.",
+         msg:"SubCategories not found.",
          data:[]
       })
    }

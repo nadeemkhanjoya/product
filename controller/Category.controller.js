@@ -24,7 +24,7 @@ export const sin=async(req,res)=>{
 
 export const getall =async(req,res)=>{
     try {
-        const data = await catergory.findo({name:req.body.name}).populate("createdBy")
+        const data = await catergory.find({name:req.body.name}).populate("createdBy")
    if(data.length > 0){
       res.send({
          status:true,
@@ -42,11 +42,10 @@ export const getall =async(req,res)=>{
         res.send({
             status: false,
             msg: "SOmething wrong with request.",
-            data: err
+            data: error
          })
     }
 }
-
 export const lookup = async(req,res)=>{
  const agri = await catergory.aggregate([
       {
