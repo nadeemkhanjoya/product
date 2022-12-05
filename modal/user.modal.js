@@ -15,6 +15,10 @@ const userschema =new mongoose.Schema({
     token:{
         type:String,
         required:false
+       }, 
+       otp:{
+        type:String,
+        required:false
        },
 
     status:{
