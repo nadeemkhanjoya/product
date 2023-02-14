@@ -1,11 +1,12 @@
 import express from "express"
 
 import { sinup , get, resendOtp, forgot, deletedata, cheakotp, email_paas, resetpass, insertData, src} from "../controller/user.controller.js"
+import { auth } from "../middelwere/auth.js"
 import { excel } from "../servises/image.servises.js"
 const userroute = express.Router()
 
 userroute.route("/user/creat").post(sinup)
-userroute.route("/user/get").post(get)
+userroute.route("/user/get").post(auth,get)
 userroute.route("/user/delete").put(deletedata)
 userroute.route("/user/otp").post(resendOtp)
 userroute.route("/user/veryfyotp").post(cheakotp)

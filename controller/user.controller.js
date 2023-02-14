@@ -55,7 +55,8 @@ export const get = async (req, res) => {
    } else {
       res.send({
          status: false,
-         msg: "data not found"
+         msg: "data not found",
+         data:{}
       })
    }
 }
@@ -127,6 +128,7 @@ export const resendOtp = async (req, res) => {
 export const cheakotp = async (req, res) => {
    var cheak = await user.findOne({ email: req.body.email, otp: req.body.otp })
    if (cheak) {
+      
       var jamil = {}
       jamil.email_verify = true
       await user.findByIdAndUpdate({ _id: cheak.id }, jamil)
@@ -195,7 +197,7 @@ export const email_paas = async (req, res) => {
             pass: "esxdqcvlcnirkdoj"
          }
       })
-      var option = {
+      var option = { 
          from: "thenadeemkhan00@gmail.com",
          to: req.body.email,
          subject: "send v code",
@@ -239,9 +241,6 @@ export const forgot = async (req, res) => {
          await user.findByIdAndUpdate({ _id: email.id }, req.body)
          email.password = pass
          res.send(email)
-
-
-
       }
    } catch (error) {
 
@@ -303,16 +302,16 @@ export const insertData = async (req, res) => {
    jsonArray.forEach(async (value, key) => {
       const find = await user.findOne({ email: value.email })
       if (!value.email) {
-         rejected.push(inertFun(value.name, value.email, "Email can not be blenk.", key+1))
+         rejected.push(insertFun(value.name, value.email, "Email can not be blenk.", key + 1))
       } else if (!value.password) {
-         rejected.push(insertFun(value.name, value.email, "Password can not be blenk.", key+1 ))
+         rejected.push(insertFun(value.name, value.email, "Password can not be blenk.", key + 1))
       }
       else if (!value.name) {
-         rejected.push(insertFun(value.name, value.email, "Username can not be blenk.", key+1 ))
+         rejected.push(insertFun(value.name, value.email, "Username can not be blenk.", key + 1))
       }
-      
-     else if (find) {
-         rejected.push(insertFun(value.name, value.umail, "user is exsiste", key+1  ))
+
+      else if (find) {
+         rejected.push(insertFun(value.name, value.umail, "user is exsiste", key + 1))
       } else {
          var pass = await bcrypt.hash(value.password, 10)
          value.password = pass
@@ -344,17 +343,17 @@ export const insertData = async (req, res) => {
    }, "1000");
 }
 
-export const src = async(req,res)=>{
+export const src = async (req, res) => {
    var cc = await user.findOne({
-      
-         $match: {
-            // status: "Active"
-            name: { $regex: req.query.search } 
-         },
 
-   //   { $lookup
-   // },
-      
+      $match: {
+         // status: "Active"
+         name: { $regex: req.query.search }
+      },
+
+      //   { $lookup
+      // },
+
    })
    res.send(cc)
 }

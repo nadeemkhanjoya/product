@@ -5,13 +5,23 @@ import productroute from "./router/product.route.js";
 import reviewreting from "./router/reviewreting.route.js";
 import subcategory from "./router/subcategory.router.js";
 import { config } from "dotenv";
-
-
 import userroute from "./router/user.router.js";
 import commentrouter from "./router/comment.route.js";
 import share from "./router/share.route.js";
 const app = express()
-
+config()
+app.use(express.json())
+app.use(userroute)
+app.use(catergoryrout)
+app.use(subcategory)
+app.use(reviewreting)
+app.use(productroute)
+app.use(commentrouter)
+app.use(share)
+condb()
+app.listen(process.env.PORT||1400,(req,res)=>{
+    console.log("server is runnig 1400")
+})
 
 // import { createServer } from "http";
 // import { Server } from "socket.io";
@@ -50,22 +60,3 @@ const app = express()
 // httpServer.listen(3001, () => {
 // 	console.log("=======================");
 // });
-
-
-
-
-
-config()
-app.use(express.json())
-app.use(userroute)
-app.use(catergoryrout)
-app.use(subcategory)
-app.use(reviewreting)
-app.use(productroute)
-app.use(commentrouter)
-app.use(share)
-condb()
-app.listen(process.env.PORT||1400,(req,res)=>{
-    console.log("server is runnig 1400")
-})
-

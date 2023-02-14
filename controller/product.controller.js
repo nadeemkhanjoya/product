@@ -63,7 +63,8 @@ export const popular =async(req,res)=>{
             msg:"Data fetch successsfiully.",
             data:sarch
         })
-    }else{
+    }
+    else{
         res.send({
             status:false,
             msg:"Product not found.",
