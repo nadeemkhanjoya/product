@@ -90,3 +90,9 @@ export const best =async(req,res)=>{
          })
     }
 } 
+
+export const rs  = async (req,res)=>{
+    var find = await product.find() 
+   var aa=  [find.price]
+   res.send(aa)
+}
